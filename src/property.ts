@@ -15,7 +15,12 @@ export function Dependency(dependency) {
 	};
 }
 
+//Generic free-style decorator
 export function Property(opts = {}) { return createPropertyDescriptor(opts); }
+
+export function Define(definition) {
+	return createPropertyDescriptor({$ref: `#/definitions/${definition}`});
+}
 export function Type(type) { return createPropertyDescriptor({type: makeType(type).type}); }
 export function Values(values) { return createPropertyDescriptor({'enum': values}); }
 

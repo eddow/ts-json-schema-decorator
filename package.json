@@ -21,5 +21,8 @@
   "bugs": {
     "url": "https://github.com/eddow/ts-json-schema-decorator/issues"
   },
-  "homepage": "https://github.com/eddow/ts-json-schema-decorator#readme"
+  "homepage": "https://github.com/eddow/ts-json-schema-decorator#readme",
+  "dependencies": {
+    "reflect-metadata": "^0.1.10"
+  }
 }

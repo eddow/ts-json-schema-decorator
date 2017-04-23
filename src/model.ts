@@ -11,7 +11,8 @@ function modelFactory(Model, options: any = {}) {
 	}
 	descr = Model.schema.properties;
 	for(var i in descr) {
-		if(descr[i].type instanceof Array) {
+		if(descr[i].$ref) descr[i] = {$ref: descr[i].$ref};	//removes all other properties than $ref
+		else if(descr[i].type instanceof Array) {
 			descr[i].anyOf = descr[i].type;
 			delete descr[i].type;
 		}
@@ -20,6 +21,13 @@ function modelFactory(Model, options: any = {}) {
 	return Model;
 }
 
+export function Definitions(defs) {
+	return (Model)=> {
+		if('function'=== typeof defs && defs.schema)
+			defs = defs.schema.properties;
+		option(defs, Model.prototype, 'schema.definitions');
+	};
+}
 
 export function Model(options = {}) {
 	if (typeof options === 'function') {
