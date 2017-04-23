@@ -1,0 +1,25 @@
+{
+  "name": "ts-json-schema-decorator",
+  "version": "1.0.0",
+  "description": "Generate JSON-Schemas out of typescript classes thanks to decorators",
+  "main": "src/index.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/eddow/ts-json-schema-decorator.git"
+  },
+  "keywords": [
+    "json",
+    "schema",
+    "typescript",
+    "decorator"
+  ],
+  "author": "François Marie De Mey",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/eddow/ts-json-schema-decorator/issues"
+  },
+  "homepage": "https://github.com/eddow/ts-json-schema-decorator#readme"
+}
