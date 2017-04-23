@@ -1,4 +1,4 @@
-import {option, createPropertyDescriptor, getPropertyDescriptor, jsdTypes, makeType} from './utils'
+import {option, createPropertyDecorator, getPropertyDescriptor, jsdTypes, makeType} from './utils'
 import extend = require('extend')
 
 export function Required(required = true) {
@@ -16,35 +16,35 @@ export function Dependency(dependency) {
 }
 
 //Generic free-style decorator
-export function Property(opts = {}) { return createPropertyDescriptor(opts); }
+export function Property(opts = {}) { return createPropertyDecorator(opts); }
 
 export function Define(definition) {
-	return createPropertyDescriptor({$ref: `#/definitions/${definition}`});
+	return createPropertyDecorator({$ref: `#/definitions/${definition}`});
 }
-export function Type(type) { return createPropertyDescriptor({type: makeType(type).type}); }
-export function Values(values) { return createPropertyDescriptor({'enum': values}); }
+export function Type(type) { return createPropertyDecorator({type: makeType(type).type}); }
+export function Values(values) { return createPropertyDecorator({'enum': values}); }
 
 export function AdditionalProperties(additionalProperties: boolean|object) {
-	return createPropertyDescriptor({additionalProperties}, 'object');
+	return createPropertyDecorator({additionalProperties}, 'object');
 }
 export function PatternProperties(patternProperties: object) {
-	return createPropertyDescriptor({patternProperties}, 'object');
+	return createPropertyDecorator({patternProperties}, 'object');
 }
 
-export function Pattern(pattern) { return createPropertyDescriptor({pattern}, 'string'); }
-export function MinLength(minLength = 1) { return createPropertyDescriptor({minLength}, 'string'); }
-export function MaxLength(maxLength) { return createPropertyDescriptor({maxLength}, 'string'); }
+export function Pattern(pattern) { return createPropertyDecorator({pattern}, 'string'); }
+export function MinLength(minLength = 1) { return createPropertyDecorator({minLength}, 'string'); }
+export function MaxLength(maxLength) { return createPropertyDecorator({maxLength}, 'string'); }
 
-export function Integer() { return createPropertyDescriptor({type: 'integer'}, 'number'); }
-export function Minimum(minimum = 0, exclusiveMinimum = false) { return createPropertyDescriptor({minimum, exclusiveMinimum}, 'number'); }
-export function Maximum(maximum, exclusiveMaximum = false) { return createPropertyDescriptor({maximum, exclusiveMaximum}, 'number'); }
+export function Integer() { return createPropertyDecorator({type: 'integer'}, 'number'); }
+export function Minimum(minimum = 0, exclusiveMinimum = false) { return createPropertyDecorator({minimum, exclusiveMinimum}, 'number'); }
+export function Maximum(maximum, exclusiveMaximum = false) { return createPropertyDecorator({maximum, exclusiveMaximum}, 'number'); }
 
 export function Items(items, uniqueItems = false) {
 	if(items instanceof Array) items
-	return createPropertyDescriptor({
+	return createPropertyDecorator({
 		items: items instanceof Array?items.map(makeType):makeType(items),
 		uniqueItems
 	}, 'array');
 }
-export function MinItems(minItems) { return createPropertyDescriptor({minItems}, 'array'); }
-export function MaxItems(maxItems) { return createPropertyDescriptor({maxItems}, 'array'); }
+export function MinItems(minItems) { return createPropertyDecorator({minItems}, 'array'); }
+export function MaxItems(maxItems) { return createPropertyDecorator({maxItems}, 'array'); }

@@ -1,4 +1,4 @@
-import {option, createPropertyDescriptor, getPropertyDescriptor, jsdTypes} from './utils'
+import {option, createPropertyDecorator, getPropertyDescriptor, jsdTypes} from './utils'
 import extend = require('extend')
 
 function modelFactory(Model, options: any = {}) {

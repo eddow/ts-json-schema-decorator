@@ -26,13 +26,14 @@ export function option(value, model, ...path) {
 
 export function getPropertyDescriptor(model, key) {
 	var props = option({}, model, 'schema.properties', key);
-	if(!props.type) {
+	if(!props.type && !props.$ref) {
 		let type = Reflect.getMetadata('design:type', model, key);
 		if(type) extend(props, makeType(type));
 	}
 	return props;
 }
-export function createPropertyDescriptor(descriptor, restriction?) {
+
+export function createPropertyDecorator(descriptor, restriction?) {
 	//TODO3: restriction is a type name ('string', 'number', ...) that should restrict the appliable types
 	return (model, key) => {
 		var propDescr = getPropertyDescriptor(model, key);

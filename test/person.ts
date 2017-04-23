@@ -33,6 +33,8 @@ class Person {
 	@jsd.Required(true)
 	address: Address
 	
+	@jsd.Items([Number, 'boolean', Address, {$ref: 'name'}])
+	testArray: object[]
 }
 
 console.log(util.inspect(Person, {depth: null}));
@@ -48,7 +50,18 @@ console.log(util.inspect(Person, {depth: null}));
          { type: 'object',
            properties:
             { street: { type: 'string', default: null },
-              nr: { type: 'number', default: null } } } },
+							nr: { type: 'number', default: null } } },
+        testArray:
+         { type: 'array',
+           items:
+            [ { type: 'number' },
+              { type: 'boolean' },
+              { type: 'object',
+                properties:
+                 { street: { type: 'string', default: null },
+                   nr: { type: 'number', default: null } } },
+              { '$ref': 'name' } ],
+           uniqueItems: false } },
      required: [ 'firstName', 'lastName', 'address' ],
      definitions: { name: { type: 'string', minLength: 1, default: null } } } }
 */
