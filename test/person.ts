@@ -1,7 +1,7 @@
 import * as jsd from '../src'
 import util = require('util');
 
-@jsd.Model
+@jsd.Model()
 class Address {
 	@jsd.Property()
 	street: string = null
@@ -10,21 +10,21 @@ class Address {
 	nr: number = null
 }
 
-@jsd.Model
+@jsd.Model()
 class PersonDefinitions {
 	@jsd.MinLength()
 	name: string = null
 }
 
-@jsd.Model
+@jsd.Model()
 @jsd.Definitions(PersonDefinitions)
 class Person {
 	@jsd.Required()
-	@jsd.Define('name')
+	@jsd.Defined('name')
 	firstName: string = null
 
 	@jsd.Required()
-	@jsd.Define('name')
+	@jsd.Defined('name')
 	lastName: string
 
 	@jsd.Required(false)

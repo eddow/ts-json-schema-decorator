@@ -18,8 +18,11 @@ export function Dependency(dependency) {
 //Generic free-style decorator
 export function Property(opts = {}) { return createPropertyDecorator(opts); }
 
-export function Define(definition) {
-	return createPropertyDecorator({$ref: `#/definitions/${definition}`});
+export function Defined(definition) {
+	return (model, key) => {
+		option({$ref: `#/definitions/${definition}`}, model, 'schema.properties', key);
+		option([], model, 'defined', definition).push(key);
+	};
 }
 export function Type(type) { return createPropertyDecorator({type: makeType(type).type}); }
 export function Values(values) { return createPropertyDecorator({'enum': values}); }
@@ -35,10 +38,17 @@ export function Pattern(pattern) { return createPropertyDecorator({pattern}, 'st
 export function MinLength(minLength = 1) { return createPropertyDecorator({minLength}, 'string'); }
 export function MaxLength(maxLength) { return createPropertyDecorator({maxLength}, 'string'); }
 
-export function Integer() { return createPropertyDecorator({type: 'integer'}, 'number'); }
+export const Integer = createPropertyDecorator({type: 'integer'}, 'number');
 export function Minimum(minimum = 0, exclusiveMinimum = false) { return createPropertyDecorator({minimum, exclusiveMinimum}, 'number'); }
 export function Maximum(maximum, exclusiveMaximum = false) { return createPropertyDecorator({maximum, exclusiveMaximum}, 'number'); }
 
+/**
+ * Explicit the possible type(s) of the array items
+ * @param items 
+ * @param uniqueItems 
+ * @example @Items([Number, 'boolean', Address, {$ref: 'name'}])
+ * @example @Items(String)
+ */
 export function Items(items, uniqueItems = false) {
 	if(items instanceof Array) items
 	return createPropertyDecorator({

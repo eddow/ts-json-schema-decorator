@@ -19,8 +19,10 @@ export function option(value, model, ...path) {
 		model = model[prop] || (model[prop] = {});
 	}
 	let prop = path[0];
-	if(model.hasOwnProperty(prop))
-		return Object=== value.constructor? extend(model[prop], value) : model[prop];
+	if(model.hasOwnProperty(prop)) {
+		if(Object=== value.constructor) model[prop] = extend({}, model[prop], value);
+		return model[prop];
+	}
 	return model[prop] = value;
 }
 
@@ -34,7 +36,7 @@ export function getPropertyDescriptor(model, key) {
 }
 
 export function createPropertyDecorator(descriptor, restriction?) {
-	//TODO3: restriction is a type name ('string', 'number', ...) that should restrict the appliable types
+	//TODO3: restriction is a type name ('string', 'number', ...) that must restrict the appliable types
 	return (model, key) => {
 		var propDescr = getPropertyDescriptor(model, key);
 		if('function'=== typeof descriptor)
@@ -48,7 +50,7 @@ export function makeType(type) {
 	if('function'=== typeof type) {
 		if(type.schema) type = extend({type: 'object'}, type.schema);
 		else {
-			//console.assert(jsdTypes[type.name], `Type should have a schema or be a basic js-data type : ${type}`)
+			//console.assert(jsdTypes[type.name], `Type must have a schema or be a basic js-data type : ${type}`)
 			type = {type: jsdTypes[type.name] || 'object'};
 		}
 	} else if('string'=== typeof type) type = {type};
