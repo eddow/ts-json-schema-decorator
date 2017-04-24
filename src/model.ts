@@ -6,10 +6,17 @@ function modelFactory(model, options: any = {}) {
 	
 	console.assert(/^class /.test(string), `${name}: Models are described by TypeScript class`);
 	while(descr = rex.exec(string)) {
-		//getPropertyDescriptor(model.prototype, descr[1]).default = JSON.parse(descr[2]);
-		console.assert(!model.schema.properties[descr[1]], `${name}.${descr[1]}: Value initializers override record initialization data and must be avoided. Use @Default() instead.`)
+		//JSON.parse should be an on-construct evaluation with 'this' initialised
+		used = getPropertyDescriptor(model.prototype, descr[1]);
+		try {
+			used.default = JSON.parse(descr[2]);
+		} catch(x) {
+			used.default = undefined;
+		}
+		//console.assert(!model.schema.properties[descr[1]], `${name}.${descr[1]}: Value initializers override record initialization data and must be avoided. Use @Default() instead.`)
 	}
 	descr = model.schema.properties;
+	model.defaults = {};
 	for(let i in descr) {
 		if(descr[i].$ref) descr[i] = {$ref: descr[i].$ref};	//removes all other properties than $ref
 		else if(descr[i].type instanceof Array) {
@@ -17,6 +24,7 @@ function modelFactory(model, options: any = {}) {
 			delete descr[i].type;
 		}
 	}
+
 	descr = extend({}, model.schema.definitions || {});	//the given definitions
 	used = model.defined;	//the used definitions
 	// Remove unused definitions and check the presence of used ones
@@ -30,7 +38,7 @@ function modelFactory(model, options: any = {}) {
 		model.schema.definitions = descr;
 	} else delete model.schema.definitions;
 	model.schema.type = 'object';
-	//Object.getOwnPropertyNames(model.prototype) //use this for the functions and accessors?
+	model.schema.tsClass = model;	//This is not serialized but can be useful for schema's users
 	return extend(model, options);
 }
 
