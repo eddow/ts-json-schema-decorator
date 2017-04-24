@@ -1,39 +1,48 @@
-import * as jsd from '../src'
 import util = require('util');
+import {
+	Model, Definitions,
+	Property, Required, Defined, Default,
+	Integer,
+	MinLength,
+	Items
+} from '../src'
 
-@jsd.Model()
+@Model()
 class Address {
-	@jsd.Property()
-	street: string = null
+	@Property()
+	@Default(null)
+	street: string
 
-	@jsd.Property()
-	nr: number = null
+	@Property()
+	@Default(null)
+	nr: number
 }
 
-@jsd.Model()
+@Model()
 class PersonDefinitions {
-	@jsd.MinLength()
-	name: string = null
+	@MinLength()
+	@Default(null)
+	name: string
 }
 
-@jsd.Model()
-@jsd.Definitions(PersonDefinitions)
+@Model()
+@Definitions(PersonDefinitions)
 class Person {
-	@jsd.Required()
-	@jsd.Defined('name')
-	firstName: string = null
+	@Required()
+	@Defined('name')
+	firstName: string
 
-	@jsd.Required()
-	@jsd.Defined('name')
+	@Required()
+	@Defined('name')
 	lastName: string
 
-	@jsd.Required(false)
+	@Required(false)
 	age: number
 
-	@jsd.Required(true)
+	@Required(true)
 	address: Address
 	
-	@jsd.Items([Number, 'boolean', Address, {$ref: 'name'}])
+	@Items([Number, 'boolean', Address, {$ref: 'name'}])
 	testArray: object[]
 }
 
