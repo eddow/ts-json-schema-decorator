@@ -27,6 +27,7 @@ function modelFactory(model, options: any = {}) {
 			if(!used[i])
 				delete descr[i];
 		model.schema.definitions = descr;
+		model.schema.type = 'object';
 	} else delete model.schema.definitions;
 	//Object.getOwnPropertyNames(model.prototype) //use this for the functions and accessors?
 	return extend(model, options);
