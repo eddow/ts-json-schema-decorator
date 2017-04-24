@@ -2,11 +2,12 @@ import {option, createPropertyDecorator, getPropertyDescriptor, jsdTypes} from '
 import extend = require('extend')
 
 function modelFactory(model, options: any = {}) {
-	var rex = /this.([^\s]*) = ([^;]*);/g, string = model.toString(), descr, used;
+	var rex = /this.([^\s]*) = ([^;]*);/g, string = model.toString(), descr, used, name = model.name;
 	
-	console.assert(/^class /.test(string), 'Models are described by TypeScript class');
+	console.assert(/^class /.test(string), `${name}: Models are described by TypeScript class`);
 	while(descr = rex.exec(string)) {
-		getPropertyDescriptor(model.prototype, descr[1]).default = JSON.parse(descr[2]);
+		//getPropertyDescriptor(model.prototype, descr[1]).default = JSON.parse(descr[2]);
+		console.assert(!model.schema.properties[descr[1]], `${name}.${descr[1]}: Value initializers override record initialization data and must be avoided. Use @Default() instead.`)
 	}
 	descr = model.schema.properties;
 	for(let i in descr) {
@@ -27,8 +28,8 @@ function modelFactory(model, options: any = {}) {
 			if(!used[i])
 				delete descr[i];
 		model.schema.definitions = descr;
-		model.schema.type = 'object';
 	} else delete model.schema.definitions;
+	model.schema.type = 'object';
 	//Object.getOwnPropertyNames(model.prototype) //use this for the functions and accessors?
 	return extend(model, options);
 }
