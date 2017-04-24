@@ -1,22 +1,25 @@
 import {option, createPropertyDecorator, getPropertyDescriptor, jsdTypes} from './utils'
 import extend = require('extend')
 
+/**
+ * 
+ * @param model 
+ * @param options {}: raw means no wrapper is used
+ */
 function modelFactory(model, options: any = {}) {
 	var rex = /this.([^\s]*) = ([^;]*);/g, string = model.toString(), descr, used, name = model.name;
 	
 	console.assert(/^class /.test(string), `${name}: Models are described by TypeScript class`);
 	while(descr = rex.exec(string)) {
-		//JSON.parse should be an on-construct evaluation with 'this' initialised
-		used = getPropertyDescriptor(model.prototype, descr[1]);
-		try {
-			used.default = JSON.parse(descr[2]);
-		} catch(x) {
-			used.default = undefined;
-		}
-		//console.assert(!model.schema.properties[descr[1]], `${name}.${descr[1]}: Value initializers override record initialization data and must be avoided. Use @Default() instead.`)
+		//The value is an expression
+		//The value - if object or array - has to be re-evaluated for each initialisation
+		//Usually, initialisation allow the use of `this` keyword
+		Object.defineProperty(getPropertyDescriptor(model.prototype, descr[1]), 'default', {
+			get: (init=> () => eval('('+init+')'))(descr[2]),
+			enumerable: true
+		});
 	}
 	descr = model.schema.properties;
-	model.defaults = {};
 	for(let i in descr) {
 		if(descr[i].$ref) descr[i] = {$ref: descr[i].$ref};	//removes all other properties than $ref
 		else if(descr[i].type instanceof Array) {
@@ -38,6 +41,27 @@ function modelFactory(model, options: any = {}) {
 		model.schema.definitions = descr;
 	} else delete model.schema.definitions;
 	model.schema.type = 'object';
+	if(!options.raw) {
+		/*
+			The wrapper is used to :
+			- Have each property initialized to its default (or undefined)
+			- initialize the properties after the parent classes has been called for the initialisation not to override constructor given values
+		*/
+		var csuper = Object.getPrototypeOf(model.prototype).constructor, wrapper;
+		function ctor(...args) {
+			var rv, i, schema = model.schema.properties;
+			rv = new csuper(...args);
+			Object.setPrototypeOf(rv, model.prototype);
+			for(i in schema)
+				if(undefined=== rv[i])
+					rv[i] = schema[i].default;
+			return rv;
+		}
+		wrapper = eval(`(function ${model.name}(){ return ctor.apply(this, arguments); })`);
+		extend(wrapper, model);
+		wrapper.prototype = model.prototype;
+		model = wrapper;
+	}
 	model.schema.tsClass = model;	//This is not serialized but can be useful for schema's users
 	return extend(model, options);
 }
