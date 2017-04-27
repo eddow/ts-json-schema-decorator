@@ -62,7 +62,7 @@ function modelFactory(model, options: any = {}) {
 		wrapper.prototype = model.prototype;
 		model = wrapper;
 	}
-	model.schema.tsClass = model;	//This is not serialized but can be useful for schema's users
+	model.schema.model = model;	//This is not serialized but can be useful for schema's users
 	return extend(model, options);
 }
 

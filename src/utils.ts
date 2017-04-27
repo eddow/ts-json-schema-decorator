@@ -56,3 +56,16 @@ export function makeType(type) {
 	} else if('string'=== typeof type) type = {type};
 	return type;
 }
+
+export function makeProperties(schema) {
+	if('function'=== typeof schema && schema.schema)
+		return schema.schema.properties;
+	schema = extend({}, schema);
+	for(let i in schema) {
+		let type = makeType(schema[i]);
+		if(!type.type && !type.$ref)
+			type = makeProperties(type);
+		schema[i] = type;
+	}
+	return schema;
+}
