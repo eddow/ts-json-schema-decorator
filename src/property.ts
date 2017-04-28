@@ -26,7 +26,8 @@ export function Defined(definition) {
 }
 export function Type(type) { return createPropertyDecorator({type: makeType(type).type}); }
 export function Default(value) { return createPropertyDecorator({'default': value}); }
-export function Values(values) { return createPropertyDecorator({'enum': values}); }
+export function Enum(values) { return createPropertyDecorator({'enum': values}); }
+export function Format(format) { return createPropertyDecorator({format}); }
 
 export function AdditionalProperties(additionalProperties: boolean|object) {
 	return createPropertyDecorator({additionalProperties}, 'object');
