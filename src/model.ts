@@ -41,6 +41,15 @@ function modelFactory(model, options: any = {}) {
 		model.schema.definitions = descr;
 	} else delete model.schema.definitions;
 	model.schema.type = 'object';
+	function ctor(...args) {
+		var rv, i, schema = model.schema.properties;
+		rv = new csuper(...args);
+		Object.setPrototypeOf(rv, model.prototype);
+		for(i in schema)
+			if(undefined=== rv[i])
+				rv[i] = schema[i].default;
+		return rv;
+	}
 	if(!options.raw) {
 		/*
 			The wrapper is used to :
@@ -48,15 +57,6 @@ function modelFactory(model, options: any = {}) {
 			- initialize the properties after the parent classes has been called for the initialisation not to override constructor given values
 		*/
 		var csuper = Object.getPrototypeOf(model.prototype).constructor, wrapper;
-		function ctor(...args) {
-			var rv, i, schema = model.schema.properties;
-			rv = new csuper(...args);
-			Object.setPrototypeOf(rv, model.prototype);
-			for(i in schema)
-				if(undefined=== rv[i])
-					rv[i] = schema[i].default;
-			return rv;
-		}
 		wrapper = eval(`(function ${model.name}(){ return ctor.apply(this, arguments); })`);
 		extend(wrapper, model);
 		wrapper.prototype = model.prototype;
