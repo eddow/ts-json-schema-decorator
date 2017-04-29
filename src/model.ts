@@ -62,7 +62,16 @@ function modelFactory(model, options: any = {}) {
 		wrapper.prototype = model.prototype;
 		model = wrapper;
 	}
-	model.schema.model = model;	//This is not serialized but can be useful for schema's users
+	function defaults(rv = {}) {
+		var i, schema = model.schema.properties;
+		rv || (rv = {});
+		for(i in schema)
+			if(undefined=== rv[i])
+				rv[i] = schema[i].default;
+		return rv;
+	}
+	extend(model.schema, {model, defaults});	//These are not serialized but can be useful for schema's users
+	
 	return extend(model, options);
 }
 

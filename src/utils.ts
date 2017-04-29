@@ -1,6 +1,10 @@
 import 'reflect-metadata'
 import extend = require('extend')
 
+export const factories = {
+	makeType: []
+};
+
 export const jsdTypes = {
 	Array: 'array',
 	String: 'string',
@@ -30,7 +34,7 @@ export function getPropertyDescriptor(model, key) {
 	var props = option({}, model, 'schema.properties', key);
 	if(!props.type && !props.$ref) {
 		let type = Reflect.getMetadata('design:type', model, key);
-		if(type) extend(props, makeType(type));
+		if(type) extend(props, makeType(type, model, key));
 	}
 	return props;
 }
@@ -39,13 +43,15 @@ export function createPropertyDecorator(descriptor, restriction?) {
 	//TODO3: restriction is a type name ('string', 'number', ...) that must restrict the appliable types
 	return (model, key) => {
 		var propDescr = getPropertyDescriptor(model, key);
-		if('function'=== typeof descriptor)
-			descriptor(propDescr);
-		else extend(propDescr, descriptor);
+		extend(propDescr, 'function'=== typeof descriptor?descriptor(model, key):descriptor);
 	};
 }
 
-export function makeType(type) {
+export function makeType(type, model, property) {
+	for(let factory of factories.makeType) {
+		let trial = factory(type, model, property);
+		if(trial) return trial;
+	}
 	if(Object=== type.constructor) return type;
 	if('function'=== typeof type) {
 		if(type.schema) type = extend({type: 'object'}, type.schema);
@@ -55,17 +61,4 @@ export function makeType(type) {
 		}
 	} else if('string'=== typeof type) type = {type};
 	return type;
-}
-
-export function makeProperties(schema) {
-	if('function'=== typeof schema && schema.schema)
-		return schema.schema.properties;
-	schema = extend({}, schema);
-	for(let i in schema) {
-		let type = makeType(schema[i]);
-		if(!type.type && !type.$ref)
-			type = makeProperties(type);
-		schema[i] = type;
-	}
-	return schema;
 }

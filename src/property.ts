@@ -24,7 +24,7 @@ export function Defined(definition) {
 		option([], model, 'defined', definition).push(key);
 	};
 }
-export function Type(type) { return createPropertyDecorator({type: makeType(type).type}); }
+export function Type(type) { return createPropertyDecorator((model, key)=> makeType(type, model, key)); }
 export function Default(value) { return createPropertyDecorator({'default': value}); }
 export function Enum(values) { return createPropertyDecorator({'enum': values}); }
 export function Format(format) { return createPropertyDecorator({format}); }
@@ -53,10 +53,12 @@ export function Maximum(maximum, exclusiveMaximum = false) { return createProper
  */
 export function Items(items, uniqueItems = false) {
 	if(items instanceof Array) items
-	return createPropertyDecorator({
-		items: items instanceof Array?items.map(makeType):makeType(items),
+	return createPropertyDecorator((model, key)=> ({
+		items: items instanceof Array?
+			items.map(item=> makeType(item, model, key)):
+			makeType(items, model, key),
 		uniqueItems
-	}, 'array');
+	}), 'array');
 }
 export function MinItems(minItems) { return createPropertyDecorator({minItems}, 'array'); }
 export function MaxItems(maxItems) { return createPropertyDecorator({maxItems}, 'array'); }
