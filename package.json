@@ -16,8 +16,8 @@
     "typescript",
     "decorator"
   ],
-  "author": "François Marie De Mey",
-  "license": "ISC",
+  "author": "fmdm",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/eddow/ts-json-schema-decorator/issues"
   },
