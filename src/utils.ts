@@ -17,7 +17,8 @@ export function option(value, model, ...path) {
 	for(let i = 0; i< path.length; ++i) {
 		path.splice(i, 1, ...path[i].split('.'))
 	}
-	path.unshift('constructor');
+	if('function'!== typeof model)
+		path.unshift('constructor');
 	while(1< path.length) {
 		let prop = path.shift();
 		model = model[prop] || (model[prop] = {});
