@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     "noImplicitAny": false,
+		"sourceRoot": "../src",
     "module": "commonjs",
     "moduleResolution": "node",
     "experimentalDecorators": true,
