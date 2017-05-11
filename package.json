@@ -24,5 +24,8 @@
   "homepage": "https://github.com/eddow/ts-json-schema-decorator#readme",
   "dependencies": {
     "reflect-metadata": "^0.1.10"
+  },
+  "devDependencies": {
+    "fuse-box": "^2.0.0"
   }
 }
