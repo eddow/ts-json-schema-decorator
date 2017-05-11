@@ -1,4 +1,4 @@
-import {option, createPropertyDecorator, getPropertyDescriptor, jsdTypes, makeType} from './utils.ts'
+import {option, createPropertyDecorator, getPropertyDescriptor, jsdTypes, makeType} from './utils'
 import extend = require('extend')
 
 export function Required(required = true) {
