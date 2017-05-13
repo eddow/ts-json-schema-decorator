@@ -25,7 +25,7 @@ export function option(value, model, ...path) {
 	}
 	let prop = path[0];
 	if(model.hasOwnProperty(prop)) {
-		if(Object=== value.constructor) model[prop] = extend({}, model[prop], value);
+		if(Object=== value.constructor) model[prop] = {...model[prop], ...value};
 		return model[prop];
 	}
 	return model[prop] = value;
@@ -35,7 +35,7 @@ export function getPropertyDescriptor(model, key) {
 	var props = option({}, model, 'schema.properties', key);
 	if(!props.type && !props.$ref) {
 		let type = Reflect.getMetadata('design:type', model, key);
-		if(type) extend(props, makeType(type, model, key));
+		if(type) props = {...props, ...makeType(type, model, key)};
 	}
 	return props;
 }
@@ -55,7 +55,7 @@ export function makeType(type, model, property) {
 	}
 	if(Object=== type.constructor) return type;
 	if('function'=== typeof type) {
-		if(type.schema) type = extend({type: 'object'}, type.schema);
+		if(type.schema) type = {type: 'object', ...type.schema};
 		else {
 			//console.assert(jsdTypes[type.name], `Type must have a schema or be a basic js-data type : ${type}`)
 			type = {type: jsdTypes[type.name] || 'object'};

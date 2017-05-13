@@ -28,7 +28,7 @@ function modelFactory(model, options: any = {}) {
 		}
 	}
 
-	descr = extend({}, model.schema.definitions || {});	//the given definitions
+	descr = { ...(model.schema.definitions||{})};	//the given definitions
 	used = model.defined;	//the used definitions
 	// Remove unused definitions and check the presence of used ones
 	if(used) {
@@ -70,9 +70,9 @@ function modelFactory(model, options: any = {}) {
 				rv[i] = schema[i].default;
 		return rv;
 	}
-	extend(model.schema, {model, defaults});	//These are not serialized but can be useful for schema's users
+	model.schema = {...model.schema, model, defaults};	//These are not serialized but can be useful for schema's users
 	
-	return extend(model, options);
+	return {...model, ...options};
 }
 
 export function Definitions(...defs) {
