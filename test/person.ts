@@ -1,11 +1,11 @@
-import util = require('util');
+import * as util from 'util'
 import {
 	Model, Definitions,
 	Property, Required, Defined, Default,
 	Integer,
 	MinLength,
 	Items
-} from '../src'
+} from '../dist/ts-json-schema-decorator.js'
 
 @Model()
 class Address {

@@ -1,5 +1,4 @@
 import 'reflect-metadata'
-import extend = require('extend')
 
 export const factories = {
 	makeType: []
@@ -25,7 +24,7 @@ export function option(value, model, ...path) {
 	}
 	let prop = path[0];
 	if(model.hasOwnProperty(prop)) {
-		if(Object=== value.constructor) model[prop] = {...model[prop], ...value};
+		if(Object=== value.constructor) model[prop] = __assign({}, model[prop], value);
 		return model[prop];
 	}
 	return model[prop] = value;
@@ -35,7 +34,7 @@ export function getPropertyDescriptor(model, key) {
 	var props = option({}, model, 'schema.properties', key);
 	if(!props.type && !props.$ref) {
 		let type = Reflect.getMetadata('design:type', model, key);
-		if(type) props = {...props, ...makeType(type, model, key)};
+		if(type) props = __assign({}, props, makeType(type, model, key));
 	}
 	return props;
 }
@@ -44,7 +43,7 @@ export function createPropertyDecorator(descriptor, restriction?) {
 	//TODO3: restriction is a type name ('string', 'number', ...) that must restrict the appliable types
 	return (model, key) => {
 		var propDescr = getPropertyDescriptor(model, key);
-		extend(propDescr, 'function'=== typeof descriptor?descriptor(model, key):descriptor);
+		__assign(propDescr, 'function'=== typeof descriptor?descriptor(model, key):descriptor);
 	};
 }
 
@@ -55,7 +54,7 @@ export function makeType(type, model, property) {
 	}
 	if(Object=== type.constructor) return type;
 	if('function'=== typeof type) {
-		if(type.schema) type = {type: 'object', ...type.schema};
+		if(type.schema) type = __assign({type: 'object'}, type.schema);
 		else {
 			//console.assert(jsdTypes[type.name], `Type must have a schema or be a basic js-data type : ${type}`)
 			type = {type: jsdTypes[type.name] || 'object'};

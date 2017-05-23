@@ -1,5 +1,9 @@
 import {option, createPropertyDecorator, getPropertyDescriptor, jsdTypes} from './utils'
-import extend = require('extend')
+
+function src(code) {
+	//TODO: add sourceMap
+	return [eval][0](code);
+}
 
 /**
  * 
@@ -9,15 +13,19 @@ import extend = require('extend')
 function modelFactory(model, options: any = {}) {
 	var rex = /this.([^\s]*) = ([^;]*);/g, string = model.toString(), descr, used, name = model.name;
 	
-	console.assert(/^class /.test(string), `${name}: Models are described by TypeScript class`);
-	while(descr = rex.exec(string)) {
-		//The value is an expression
-		//The value - if object or array - has to be re-evaluated for each initialisation
-		//Usually, initialisation allow the use of `this` keyword
-		Object.defineProperty(getPropertyDescriptor(model.prototype, descr[1]), 'default', {
-			get: (init=> () => eval('('+init+')'))(descr[2]),
-			enumerable: true
-		});
+	//console.assert(/^class /.test(string), `${name}: Models are described by TypeScript class`);
+	if(/^class /.test(string)) {
+		while(descr = rex.exec(string)) {
+			//The value is an expression
+			//The value - if object or array - has to be re-evaluated for each initialisation
+			//Usually, initialisation allow the use of `this` keyword
+			Object.defineProperty(getPropertyDescriptor(model.prototype, descr[1]), 'default', {
+				get: (init=> () => src('('+init+')'))(descr[2]),
+				enumerable: true
+			});
+		}
+	} else {
+		//TODO: read defaults from function() syntax
 	}
 	descr = model.schema.properties;
 	for(let i in descr) {
@@ -28,7 +36,7 @@ function modelFactory(model, options: any = {}) {
 		}
 	}
 
-	descr = { ...(model.schema.definitions||{})};	//the given definitions
+	descr = __assign({}, model.schema.definitions||{});	//the given definitions
 	used = model.defined;	//the used definitions
 	// Remove unused definitions and check the presence of used ones
 	if(used) {
@@ -57,8 +65,8 @@ function modelFactory(model, options: any = {}) {
 			- initialize the properties after the parent classes has been called for the initialisation not to override constructor given values
 		*/
 		var csuper = Object.getPrototypeOf(model.prototype).constructor, wrapper;
-		wrapper = eval(`(function ${model.name}(){ return ctor.apply(this, arguments); })`);
-		extend(wrapper, model);
+		wrapper = src(`(function ${model.name}(){ return ctor.apply(this, arguments); })`);
+		__assign(wrapper, model);
 		wrapper.prototype = model.prototype;
 		model = wrapper;
 	}
@@ -70,9 +78,9 @@ function modelFactory(model, options: any = {}) {
 				rv[i] = schema[i].default;
 		return rv;
 	}
-	model.schema = {...model.schema, model, defaults};	//These are not serialized but can be useful for schema's users
+	model.schema = __assign({}, model.schema, {model, defaults});	//These are not serialized but can be useful for schema's users
 	
-	return {...model, ...options};
+	return __assign(model, options);
 }
 
 export function Definitions(...defs) {
