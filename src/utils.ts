@@ -34,7 +34,7 @@ export function getPropertyDescriptor(model, key) {
 	var props = option({}, model, 'schema.properties', key);
 	if(!props.type && !props.$ref) {
 		let type = Reflect.getMetadata('design:type', model, key);
-		if(type) props = __assign({}, props, makeType(type, model, key));
+		if(type) __assign(props, makeType(type, model, key));
 	}
 	return props;
 }
