@@ -4,8 +4,8 @@
   "description": "Generate JSON-Schemas out of typescript classes thanks to decorators",
   "main": "dist/ts-json-schema-decorator.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "rollup": "rollup -c"
+    "test": "node test",
+    "fuse": "node fuse"
   },
   "repository": {
     "type": "git",
@@ -24,13 +24,10 @@
   },
   "homepage": "https://github.com/eddow/ts-json-schema-decorator#readme",
   "dependencies": {
-    "extend": "^3.0.1",
     "reflect-metadata": "^0.1.10",
     "tslib": "^1.7.1"
   },
   "devDependencies": {
-    "rollup": "^0.41.6",
-    "rollup-plugin-commonjs": "^8.0.2",
-    "rollup-plugin-typescript": "^0.8.1"
+    "fuse-box": "^2.2.1"
   }
 }

@@ -58,14 +58,15 @@ function modelFactory(model, options: any = {}) {
 				rv[i] = schema[i].default;
 		return rv;
 	}
-	if(!options.raw) {
+	if(false===options.raw) {
 		/*
 			The wrapper is used to :
 			- Have each property initialized to its default (or undefined)
 			- initialize the properties after the parent classes has been called for the initialisation not to override constructor given values
 		*/
 		var csuper = Object.getPrototypeOf(model.prototype).constructor, wrapper;
-		wrapper = src(`(function ${model.name}(){ return ctor.apply(this, arguments); })`);
+		//TODO: https://github.com/substack/vm-browserify or similar
+		wrapper = ctor; //src(`(function ${model.name}(){ return ctor.apply(this, arguments); })`);
 		__assign(wrapper, model);
 		wrapper.prototype = model.prototype;
 		model = wrapper;
