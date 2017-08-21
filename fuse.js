@@ -1,14 +1,16 @@
-const {FuseBox, TypeScriptHelpers, EnvPlugin, QuantumPlugin} = require("fuse-box");
+const {FuseBox, QuantumPlugin} = require("fuse-box");
 const fuse = FuseBox.init({
 	homeDir: "src",
 	output: "dist/$name.js",
 	cache: false,
-	//debug: true,
 	sourceMaps: true,
 	plugins: [
-		TypeScriptHelpers(),
 		//EnvPlugin({NODE_ENV: production ? "production" : "development"}),
-		//QuantumPlugin()
+		QuantumPlugin({
+			bakeApiIntoBundle: 'ts-json-schema-decorator',
+			containedAPI: true,
+			target: 'npm'
+		})
 	],
 	package: {
 		name: "ts-json-schema-decorator",
@@ -19,7 +21,6 @@ const fuse = FuseBox.init({
 	}
 });
 fuse.bundle("ts-json-schema-decorator")
-	.watch()
 	.instructions('> [index.ts]');
 
 fuse.run();

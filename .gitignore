@@ -2,3 +2,5 @@ node_modules
 dist
 test/*.js
 package-lock.*
+.yalc/*
+yalc.lock
