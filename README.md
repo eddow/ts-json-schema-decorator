@@ -20,7 +20,7 @@ import {
 	Integer,
 	MinLength,
 	Items
-} from '../src'
+} from 'ts-json-schema-decorator'
 
 @Model()
 class Address {
@@ -93,7 +93,7 @@ console.log(util.inspect(Person, {depth: null}));
 # Incoming
 Next step is hyper-documentation, we have to make sure even the most innocent grand-ma can use the jsDoc-style tooltip documentation of the IDE to understand each parameter she gives in.
 
-## Donations
+## Support development
 I contribute for free with drive, passion and time.
 If you like what I do, you can promote me to do it more.
 
