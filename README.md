@@ -92,14 +92,3 @@ console.log(util.inspect(Person, {depth: null}));
 ```
 # Incoming
 Next step is hyper-documentation, we have to make sure even the most innocent grand-ma can use the jsDoc-style tooltip documentation of the IDE to understand each parameter she gives in.
-
-## Support development
-I contribute for free with drive, passion and time.
-If you like what I do, you can promote me to do it more.
-
-These are the only *like* buttons that have a real effect.
-
-- [paypal.me/eeddow](https://www.paypal.me/eeddow)
-- ETH: 0xb79b61130bc5726ddab6c1d59c3e0479afe69540
-- BTC: 39ybn3KGNUvZrhifaLJcf4cJdzkGMdfAMT
-- BCH: 3K81iYWwLZuWXY1qHcBL559FYraUqKMkEp

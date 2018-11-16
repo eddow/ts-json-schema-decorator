@@ -5,7 +5,7 @@ import {
 	Integer,
 	MinLength,
 	Items
-} from '../dist/ts-json-schema-decorator.js'
+} from '../src'
 
 @Model()
 class Address {

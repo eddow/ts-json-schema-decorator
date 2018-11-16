@@ -1,11 +1,12 @@
 {
   "name": "ts-json-schema-decorator",
-  "version": "1.2.3",
+  "version": "1.2.4",
   "description": "Generate JSON-Schemas out of typescript classes thanks to decorators",
   "main": "dist/ts-json-schema-decorator.js",
+  "ts:main": "src/index.ts",
   "scripts": {
-    "test": "node test",
-    "fuse": "node fuse"
+    "prepack": "webpack",
+    "test": "webpack --config webpack.test.js"
   },
   "keywords": [
     "json",
@@ -24,10 +25,16 @@
   },
   "homepage": "https://github.com/eddow/ts-json-schema-decorator#readme",
   "dependencies": {
-    "reflect-metadata": "^0.1.10",
-    "tslib": "^1.7.1"
+    "reflect-metadata": "^0.1.10"
   },
   "devDependencies": {
-    "fuse-box": "^2.2.2"
+    "source-map-loader": "^0.2.4",
+    "ts-loader": "^5.3.0",
+    "tslib": "^1.9.3",
+    "typescript": "^3.1.6",
+    "webpack": "^4.25.1",
+    "webpack-cli": "^3.1.2",
+    "webpack-dts-bundle": "0.0.2",
+    "webpack-node-externals": "^1.7.2"
   }
 }

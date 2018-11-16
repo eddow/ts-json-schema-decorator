@@ -36,7 +36,7 @@ function modelFactory(model, options: any = {}) {
 		}
 	}
 
-	descr = __assign({}, model.schema.definitions||{});	//the given definitions
+	descr = Object.assign({}, model.schema.definitions||{});	//the given definitions
 	used = model.defined;	//the used definitions
 	// Remove unused definitions and check the presence of used ones
 	if(used) {
@@ -67,7 +67,7 @@ function modelFactory(model, options: any = {}) {
 		var csuper = Object.getPrototypeOf(model.prototype).constructor, wrapper;
 		//TODO: https://github.com/substack/vm-browserify or similar
 		wrapper = ctor; //src(`(function ${model.name}(){ return ctor.apply(this, arguments); })`);
-		__assign(wrapper, model);
+		Object.assign(wrapper, model);
 		wrapper.prototype = model.prototype;
 		model = wrapper;
 	}
@@ -79,9 +79,9 @@ function modelFactory(model, options: any = {}) {
 				rv[i] = schema[i].default;
 		return rv;
 	}
-	model.schema = __assign({}, model.schema, {model, defaults});	//These are not serialized but can be useful for schema's users
+	model.schema = Object.assign({}, model.schema, {model, defaults});	//These are not serialized but can be useful for schema's users
 	
-	return __assign(model, options);
+	return Object.assign(model, options);
 }
 
 export function Definitions(...defs) {

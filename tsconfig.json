@@ -1,12 +1,23 @@
 {
-  "compilerOptions": {
+	"compilerOptions": {
 		"importHelpers": true,
-    "noImplicitAny": false,
-		"sourceRoot": "../src",
-    "module": "commonjs",
-    "moduleResolution": "node",
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
-    "allowSyntheticDefaultImports": true
-  }
+		"declaration": true,
+		"noImplicitAny": false,
+		"sourceMap": true,
+		"sourceRoot": "src",
+		"outDir": "dist",
+		"module": "commonjs",
+		"target": "es5",
+		"lib": [
+			"es5",
+			"es6"
+		],
+		"moduleResolution": "node",
+		"experimentalDecorators": true,
+		"emitDecoratorMetadata": true,
+		"allowSyntheticDefaultImports": true
+	},
+	"include": [
+		"./src/**/*.ts"
+	]
 }
